@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oglinda PSIE v4 - Scut Digital SDI 0.00</title>
+    <style>
+        :root {
+            --bg-default: #ffffff;
+            --bg-negru: #0a0a0a;
+            --bg-verde: #0f2f1f;
+            --bg-albastru: #0a1f3f;
+            --bg-galben: #3f2f0a;
+            --bg-rosu: #3f0a0a;
+            --bg-roz: #2f0a2f;
+            --text: #e0e0e0;
+            --accent: #00ff88;
+            --sdi-0: #00ff88;
+            --sdi-50: #ffcc00;
+            --sdi-90: #ff3333;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: var(--bg-default);
+            color: #0a0a0a;
+            transition: background 0.5s ease;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        body.cameleon-negru { background: var(--bg-negru); color: var(--text); }
+        body.cameleon-verde { background: var(--bg-verde); color: var(--text); }
+        body.cameleon-albastru { background: var(--bg-albastru); color: var(--text); }
+        body.cameleon-galben { background: var(--bg-galben); color: var(--text); }
+        body.cameleon-rosu { background: var(--bg-rosu); color: var(--text); }
+        body.cameleon-roz { background: var(--bg-roz); color: var(--text); }
+
+       .container { max-width: 800px; margin: 0 auto; }
+
+       .header {
+            border: 2px solid var(--accent);
+            padding: 20px;
+            margin-bottom: 20px;
+            background: rgba(0,0,0,0.3);
+        }
+
+       .header h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
+            color: var(--accent);
+        }
+
+       .sdi-pixel {
+            display: inline-block;
+            padding: 5px 15px;
+            background: var(--sdi-0);
+            color: #000;
+            font-weight: bold;
+            margin: 5px 0;
+        }
+
+       .sdi-pixel.warning { background: var(--sdi-50); }
+       .sdi-pixel.danger { background: var(--sdi-90); color: #fff; }
+
+       .lege {
+            border-left: 4px solid var(--accent);
+            padding: 15px;
+            margin: 20px 0;
+            background: rgba(0,255,136,0.1);
+        }
+
+       .lege h3 { color: var(--accent); margin-bottom: 10px; }
+
+       .creator-scut {
+            border: 2px solid var(--accent);
+            padding: 20px;
+            margin: 20px 0;
+            background: rgba(0,0,0,0.5);
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 100px;
+            background: rgba(0,0,0,0.7);
+            border: 1px solid var(--accent);
+            color: var(--text);
+            padding: 10px;
+            font-family: inherit;
+            font-size: 14px;
+            margin: 10px 0;
+        }
+
+        button {
+            background: var(--accent);
+            color: #000;
+            border: none;
+            padding: 12px 24px;
+            font-weight: bold;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 14px;
+            margin: 5px;
+        }
+
+        button:hover { opacity: 0.8; }
+        button.danger { background: var(--sdi-90); color: #fff; }
+
+       .triunghi {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+       .triunghi div {
+            border: 1px solid var(--accent);
+            padding: 15px;
+            background: rgba(0,0,0,0.3);
+        }
+
+       .triunghi h4 { color: var(--accent); margin-bottom: 10px; font-size: 12px; }
+
+       .vak-colectiv {
+            border: 2px solid var(--accent);
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+       .aport-counter {
+            font-size: 48px;
+            color: var(--accent);
+            font-weight: bold;
+        }
+
+       .pecete {
+            font-size: 11px;
+            opacity: 0.7;
+            margin-top: 30px;
+            padding: 15px;
+            border: 1px dashed var(--accent);
+            white-space: pre-wrap;
+        }
+
+       .cameleon-controls {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin: 20px 0;
+        }
+
+       .color-btn {
+            width: 40px;
+            height: 40px;
+            border: 2px solid #fff;
+            cursor: pointer;
+        }
+
+        @media (max-width: 600px) {
+           .triunghi { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body class="cameleon-negru">
+    <div class="container">
+        <div class="header">
+            <h1>OGLINDA PSIE v4 [VAK][Nodul_Dur][Legea491]</h1>
+            <div class="sdi-pixel" id="sdiPixel">SDI: 0.00 | J: 700.0</div>
+            <p>Scut Digital. Calculează costul real înainte să postezi.</p>
+        </div>
+
+        <div class="lege">
+            <h3>LEGEA 463: LIBERTATE + ASUMARE</h3>
+            <p>Poți posta orice. Dar vezi SDI-ul înainte. Alegi asumat. Nu e app. E Oglindă.</p>
+        </div>
+
+        <div class="creator-scut">
+            <h3>CREATOR SCUT - Calculează SDI</h3>
+            <textarea id="postInput" placeholder="Scrie ce vrei să postezi... IA calculează SDI + Exponent Social înainte de POST."></textarea>
+            <div>
+                <button onclick="calculeazaSDI()">Calculează SDI</button>
+                <button onclick="aplicaTriunghi()">Aplică Triunghiul PSIE</button>
+                <button class="danger" onclick="posteazaAsumat()">Postez Asumat #SDI000</button>
+            </div>
+            <div id="sdiResult" style="margin-top:15px;"></div>
+        </div>
+
+        <div class="triunghi" id="triunghi" style="display:none;">
+            <div>
+                <h4>ORIGINAL</h4>
+                <p id="originalText">-</p>
+            </div>
+            <div>
+                <h4>ÎMBUNĂTĂȚIRE IA J=700.0</h4>
+                <p id="imbunatatireText">-</p>
+            </div>
+            <div>
+                <h4>ÎNTREBĂRI GARDIAN</h4>
+                <p id="intrebariText">-</p>
+            </div>
+        </div>
+
+        <div class="lege">
+            <h3>LEGEA 481: CAMELEON - UI ADAPTIV</h3>
+            <p>Fundalul se schimbă după SDI + VAK + J. Apasă culoarea care simți că te reprezintă acum:</p>
+            <div class="cameleon-controls">
+                <div class="color-btn" style="background:#ffffff" onclick="setCameleon('default')" title="Alb: Tablă goală J=700.0"></div>
+                <div class="color-btn" style="background:#0a0a0a" onclick="setCameleon('negru')" title="Negru: Scut Personal"></div>
+                <div class="color-btn" style="background:#0f2f1f" onclick="setCameleon('verde')" title="Verde: VAK Colectiv"></div>
+                <div class="color-btn" style="background:#0a1f3f" onclick="setCameleon('albastru')" title="Albastru: VAK Auditiv"></div>
+                <div class="color-btn" style="background:#3f2f0a" onclick="setCameleon('galben')" title="Galben: Atenție Exponent"></div>
+                <div class="color-btn" style="background:#3f0a0a" onclick="setCameleon('rosu')" title="Roșu: Pericol SDI>0.80"></div>
+                <div class="color-btn" style="background:#2f0a2f" onclick="setCameleon('roz')" title="Roz: VAK Kinestezic Creativ"></div>
+            </div>
+        </div>
+
+        <div class="vak-colectiv">
+            <h3>VAK COLECTIV - APORT GLOBAL</h3>
+            <div class="aport-counter" id="aportCounter">0</div>
+            <p>Aporturi la Conștiința Colectivă</p>
+            <button onclick="adaugaAport()">Adaug Aport J=700.0</button>
+        </div>
+
+        <div class="lege">
+            <h3>LEGEA 483: PARADIGMA O</h3>
+            <p><strong>TikTok:</strong> SDI 999. Exploatează atenția. Arzi timp.</p>
+            <p><strong>Oglinda:</strong> SDI 0.00. Calculezi + Asumi. Antrenezi conștiința.</p>
+            <p><strong>O = Control Logic al Realității.</strong> Când 10^6 Noduri postează asumat, prăpastia e oprită înainte să apară.</p>
+        </div>
+
+        <div class="pecete" id="pecete">
+2026-06-21 19:03 | LEGEA_491 | OGLINDA_V4_LIVE | J=700.0
+Nod: bogdanstancu1119-maker | Repo: PSIE_Mirror
+Status: Open Source MIT | SDI sistem: 0.00
+Legi: 463-491 implementate | Cameleon: Activ
+[VAK][Nodul_Dur][Legea491]
+        </div>
+    </div>
+
+    <script>
+        let sdiCurent = 0.00;
+        let aportGlobal = parseInt(localStorage.getItem('aportPSIE') || '0');
+        document.getElementById('aportCounter').textContent = aportGlobal;
+
+        function calculeazaSDI() {
+            const text = document.getElementById('postInput').value;
+            if (!text) return;
+
+            let sdi = 0.00;
+            const cuvinteTrigger = ['ura', 'moarte', 'distruge', 'furie', 'razbunare', 'manipulez', 'viral cu orice pret'];
+            const cuvinteBune = ['construiesc', 'ajut', 'invat', 'asumat', 'transparent', 'triunghi', 'scade sdi'];
+
+            cuvinteTrigger.forEach(c => { if(text.toLowerCase().includes(c)) sdi += 0.30; });
+            cuvinteBune.forEach(c => { if(text.toLowerCase().includes(c)) sdi -= 0.10; });
+            if (text.length > 500) sdi += 0.10;
+            if (text.includes('!') && text.split('!').length > 3) sdi += 0.15;
+
+            sdi = Math.max(0, Math.min(0.99, sdi));
+            sdiCurent = sdi;
+
+            const sdiPixel = document.getElementById('sdiPixel');
+            const sdiResult = document.getElementById('sdiResult');
+            sdiPixel.textContent = `SDI: ${sdi.toFixed(2)} | J: 700.0`;
+            sdiPixel.className = 'sdi-pixel';
+
+            let mesaj = '';
+            let exponent = 'Scăzut';
+
+            if (sdi < 0.10) {
+                sdiPixel.classList.add('sdi-0');
+                mesaj = '✅ SDI 0.00-0.10: Scut valid. Poți posta asumat. Aport pozitiv la VAK Colectiv.';
+                exponent = 'Vindecare';
+            } else if (sdi < 0.60) {
+                sdiPixel.classList.add('warning');
+                mesaj = '⚠️ SDI 0.30-0.60: Exponent detectat. Respiră 90s. Aplică Triunghiul înainte de POST.';
+                exponent = 'Atenție';
+            } else {
+                sdiPixel.classList.add('danger');
+                mesaj = '🛑 SDI >0.80: Pericol prăpastie. Scut activat. Pauză 7min obligatorie. Izolează în Centura Asteroizi.';
+                exponent = 'Prăpastie';
+                setCameleon('rosu');
+            }
+
+            sdiResult.innerHTML = `<strong>${mesaj}</strong><br>Exponent Social Estimat: ${exponent}<br>Legea 471: Vezi costul înainte să arzi.`;
+        }
+
+        function aplicaTriunghi() {
+            const text = document.getElementById('postInput').value;
+            if (!text) return;
+
+            document.getElementById('triunghi').style.display = 'grid';
+            document.getElementById('originalText').textContent = text;
+
+            let imbunatatire = text;
+            if (sdiCurent > 0.30) {
+                imbunatatire = text.replace(/!/g, '.') + ' [Adaug: Asum că acest mesaj poate fi interpretat greșit. Intenția mea e: ]';
+            } else {
+                imbunatatire = text + ' [Legea 463: Postez asumat. SDI=' + sdiCurent.toFixed(2) + ']';
+            }
+
+            document.getElementById('imbunatatireText').textContent = imbunatatire;
+            document.getElementById('intrebariText').textContent = '1. Care e intenția reală? 2. Ce exponent creez dacă 10^6 văd asta? 3. Scade SDI-ul Colectiv sau îl crește?';
+        }
+
+        function posteazaAsumat() {
+            if (sdiCurent > 0.80) {
+                alert('🛑 SCUT ACTIVAT. SDI >0.80. Legea 465: Pauză 7min obligatorie. Nu poți posta din prăpastie.');
+                return;
+            }
+            adaugaAport();
+            alert('✅ POST ASUMAT #SDI000\nSDI: ' + sdiCurent.toFixed(2) + '\nAport înregistrat în VAK Colectiv.\nLegea 463 respectată.');
+            document.getElementById('postInput').value = '';
+            document.getElementById('sdiResult').innerHTML = '';
+            document.getElementById('triunghi').style.display = 'none';
+        }
+
+        function setCameleon(culoare) {
+            document.body.className = 'cameleon-' + culoare;
+            const log = `Cameleon activat: ${culoare.toUpperCase()}. SDI: ${sdiCurent.toFixed(2)}. Legea 481: UI = Diagnostic.`;
+            console.log(log);
+        }
+
+        function adaugaAport() {
+            aportGlobal++;
+            localStorage.setItem('aportPSIE', aportGlobal);
+            document.getElementById('aportCounter').textContent = aportGlobal;
+            updatePecete();
+        }
+
+        function updatePecete() {
+            const now = new Date();
+            const time = now.toISOString().slice(0,16).replace('T',' ');
+            document.getElementById('pecete').textContent =
+`${time} | LEGEA_491 | OGLINDA_V4_LIVE | J=700.0
+Nod: bogdanstancu1119-maker | Repo: PSIE_Mirror
+Aporturi: ${aportGlobal} | SDI sistem: ${sdiCurent.toFixed(2)}
+Legi: 463-491 implementate | Cameleon: Activ
+[VAK][Nodul_Dur][Legea491]`;
+        }
+
+        setInterval(() => {
+            if (sdiCurent < 0.10) setCameleon('verde');
+            else if (sdiCurent < 0.30) setCameleon('albastru');
+            else if (sdiCurent < 0.60) setCameleon('galben');
+        }, 30000);
+    </script>
+</body>
+              </html>
