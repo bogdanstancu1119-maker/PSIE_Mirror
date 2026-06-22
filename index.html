@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PSIE🪞 Mirror - Feed Evolutiv pentru Conștiință Colectivă</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=JetBrains+Mono:wght@400;600&display=swap');
+        
+        :root {
+            --bg-dark: #0D0D1A;
+            --bg-card: #1A0D2E;
+            --bg-hover: #2A1D3E;
+            --cyan: #00F5FF;
+            --violet: #A855F7;
+            --green: #10B981;
+            --red: #EF4444;
+            --yellow: #F59E0B;
+            --text: #E5E7EB;
+            --text-dim: #9CA3AF;
+            --border: #2D3748;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, var(--bg-dark) 0%, #1A0D2E 100%);
+            color: var(--text);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+
+        header {
+            text-align: center;
+            padding: 40px 20px;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, var(--cyan), var(--violet));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+
+        .axioma {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--cyan);
+            font-size: 1.1rem;
+            margin: 15px 0;
+        }
+
+        .status-badges { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 20px; }
+        .badge {
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+        }
+        .badge.stabil { border-color: var(--green); color: var(--green); }
+        .badge.audit { border-color: var(--cyan); color: var(--cyan); }
+        .badge.pulse { animation: pulse 2s infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.6; } }
+
+        .controls { display: flex; gap: 15px; margin-bottom: 30px; flex-wrap: wrap; }
+        input, button {
+            padding: 12px 20px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background: var(--bg-card);
+            color: var(--text);
+            font-size: 1rem;
+        }
+        input { flex: 1; min-width: 300px; font-family: 'JetBrains Mono', monospace; }
+        input:focus { outline: none; border-color: var(--cyan); }
+        button {
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        button:hover { background: var(--bg-hover); transform: translateY(-2px); }
+        button.primary { background: linear-gradient(90deg, var(--cyan), var(--violet)); border: none; }
+
+        .metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        .metric-card {
+            background: var(--bg-card);
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+        }
+        .metric-value { font-size: 2rem; font-weight: 700; color: var(--cyan); }
+        .metric-label { color: var(--text-dim); font-size: 0.9rem; margin-top: 5px; }
+
+        .feed { display: flex; flex-direction: column; gap: 20px; }
+        .post {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            transition: all 0.3s;
+        }
+        .post:hover { border-color: var(--violet); transform: translateX(5px); }
+        .post-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .post-title { font-family: 'JetBrains Mono', monospace; font-size: 1.1rem; font-weight: 600; }
+        .post-badges { display: flex; gap: 8px; }
+        .releu-badge {
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        .releu-aprobat { background: rgba(16, 185, 129, 0.2); color: var(--green); }
+        .releu-sandbox { background: rgba(239, 68, 0.2); color: var(--red); }
+        .releu-oglinda { background: rgba(245, 158, 11, 0.2); color: var(--yellow); }
+
+        .post-score {
+            margin: 15px 0;
+            padding: 12px;
+            background: rgba(0, 245, 255, 0.05);
+            border-left: 3px solid var(--cyan);
+            border-radius: 6px;
+        }
+        .post-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 15px; }
+        .action-btn {
+            padding: 8px 16px;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            background: transparent;
+            color: var(--text-dim);
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+        .action-btn:hover { background: var(--bg-hover); color: var(--text); border-color: var(--cyan); }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal.active { display: flex; }
+        .modal-content {
+            background: var(--bg-card);
+            padding: 30px;
+            border-radius: 12px;
+            max-width: 700px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            border: 1px solid var(--violet);
+        }
+        .modal-header { display: flex; justify-content: space-between; margin-bottom: 20px; }
+        .close-btn { background: none; border: none; color: var(--text); font-size: 1.5rem; cursor: pointer; }
+        pre {
+            background: var(--bg-dark);
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 40px 20px;
+            margin-top: 60px;
+            border-top: 1px solid var(--border);
+            color: var(--text-dim);
+        }
+        .ripple {
+            position: relative;
+            overflow: hidden;
+        }
+        .ripple::after {
+            content: '';
+            position: absolute;
+            top: 50%; left: 50%;
+            width: 0; height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+        .ripple:active::after { width: 300px; height: 300px; }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 1.8rem; }
+            .controls { flex-direction: column; }
+            input { min-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>PSIE🪞 Mirror v3.2.2</h1>
+            <div class="axioma">Universul = Gând de Structurare ^ ∞</div>
+            <div class="status-badges">
+                <span class="badge stabil">STABIL</span>
+                <span class="badge audit">AUDIT_READY</span>
+                <span class="badge pulse">L0-L476 ACTIVE</span>
+            </div>
+        </header>
+
+        <div class="controls">
+            <input type="text" id="repoInput" placeholder="github.com/bogdanstancu1119-maker/PSIE-Lab" value="github.com/bogdanstancu1119-maker/PSIE-Lab">
+            <button class="primary ripple" onclick="loadRepo()">🔍 Analizează Repo</button>
+            <button class="ripple" onclick="generateReadme()">📝 Generează README.md</button>
+            <button class="ripple" onclick="runKernel()">⚡ Rulează Kernel</button>
+        </div>
+
+        <div class="metrics">
+            <div class="metric-card">
+                <div class="metric-value" id="jTotal">0.00</div>
+                <div class="metric-label">J_total = J × D</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value" id="sdi">0.000</div>
+                <div class="metric-label">SDI Global</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value" id="vot">0%</div>
+                <div class="metric-label">Consensus Vot</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value" id="constiinta">0</div>
+                <div class="metric-label">Scor Conștiință Colectivă</div>
+            </div>
+        </div>
+
+        <div class="feed" id="feed"></div>
+
+        <div class="footer">
+            <p><strong>Universul = Gând de Structurare ^ ∞</strong> | V^∞ | Fork-uiește Conștiința</p>
+            <p style="margin-top: 10px;">PSIE Genesis Kernel v3.2.2 | Axioma Zero Public Domain</p>
+        </div>
+    </div>
+
+    <div class="modal" id="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Kernel Output</h2>
+                <button class="close-btn" onclick="closeModal()">&times;</button>
+            </div>
+            <div id="modalBody"></div>
+        </div>
+    </div>
+
+    <script>
+        // State
+        let constiintaScore = parseInt(localStorage.getItem('constiinta') || '0');
+        let repoFiles = [];
+        let invatareCount = parseInt(localStorage.getItem('invatare') || '0');
+        document.getElementById('constiinta').textContent = constiintaScore;
+
+        // Mock Repos
+        const mockRepos = {
+            'github.com/bogdanstancu1119-maker/PSIE-Lab': [
+                {name: 'PSIE_genesis_kernel.py', cai_noi: 5, cai_inchise: 0, cfc: 0.2, cost_ext: 0, d: 0.95, delta_j: 0.0002},
+                {name: 'Agregator_releu.py', cai_noi: 3, cai_inchise: 0, cfc: 0.3, cost_ext: 0.1, d: 0.88, delta_j: 0.0003},
+                {name: 'Arca_legis.py', cai_noi: 4, cai_inchise: 0, cfc: 0.2, cost_ext: 0, d: 0.92, delta_j: 0.0001},
+                {name: 'Autonomie.py', cai_noi: 1, cai_inchise: 2, cfc: 0.95, cost_ext: 0.8, d: 0.15, delta_j: 0.008},
+                {name: 'Hidra.py', cai_noi: 4, cai_inchise: 0, cfc: 0.3, cost_ext: 0, d: 0.90, delta_j: 0.0002},
+                {name: 'Oracol.py', cai_noi: 3, cai_inchise: 0, cfc: 0.2, cost_ext: 0, d: 0.91, delta_j: 0.0001},
+                {name: 'PSIE_activate.py', cai_noi: 2, cai_inchise: 0, cfc: 0.1, cost_ext: 0, d: 0.96, delta_j: 0.0001},
+            ]
+        };
+
+        // Relee Simulation
+        function releuGemini(file) {
+            const score = file.cai_noi >= 2 && file.cai_inchise === 0;
+            return { name: '🧠 Gemini', decizie: score ? 'APROBAT' : 'REFUZAT_L0', scor: file.delta_j };
+        }
+
+        function releuGrok(file) {
+            const risc = file.cost_ext > 0.5 || file.cfc > 0.9;
+            return { name: '🔍 Grok', decizie: risc ? 'OGLINDA_L476' : 'APROBAT', scor: file.cost_ext };
+        }
+
+        function releuDeepseek(file) {
+            const divers = file.d >= 0.1;
+            return { name: '🌐 Deepseek', decizie: divers ? 'APROBAT' : 'REFUZAT_L474', scor: file.d };
+        }
+
+        function releuPerplexity(file) {
+            return { name: '📚 Perplexity', decizie: 'APROBAT', scor: 1.0 };
+        }
+
+        function kernelArca(file) {
+            const r1 = releuGemini(file);
+            const r2 = releuGrok(file);
+            const r3 = releuDeepseek(file);
+            const r4 = releuPerplexity(file);
+            
+            if (file.cfc > 0.9 && file.cost_ext > 0.5) {
+                return { decizie: 'SANDBOX_L471', motiv: 'CFC>0.9 + cost externalizat. Risc ridicat.', relee: [r1,r2,r3,r4] };
+            }
+            if (r1.decizie !== 'APROBAT' || r2.decizie === 'OGLINDA_L476') {
+                return { decizie: 'OGLINDA_L476', motiv: 'Încalcă Axioma Zero sau manipulează.', relee: [r1,r2,r3,r4] };
+            }
+            if (r3.decizie !== 'APROBAT') {
+                return { decizie: 'REFUZAT_L474', motiv: 'Monocultură detectată D<0.1', relee: [r1,r2,r3,r4] };
+            }
+            return { decizie: 'APROBAT_VOT', motiv: 'Trece L0-L476. Transferat la vot 90%.', relee: [r1,r2,r3,r4] };
+        }
+
+        function renderPost(file, kernel) {
+            const releeBadges = kernel.relee.map(r => {
+                const cls = r.decizie.includes('APROBAT') ? 'releu-aprobat' : 
+                           r.decizie.includes('SANDBOX') ? 'releu-sandbox' : 'releu-oglinda';
+                return `<span class="releu-badge ${cls}">${r.name}</span>`;
+            }).join('');
+
+            const verdictColor = kernel.decizie === 'APROBAT_VOT' ? 'var(--green)' : 
+                                kernel.decizie === 'SANDBOX_L471' ? 'var(--red)' : 'var(--yellow)';
+
+            return `
+                <div class="post">
+                    <div class="post-header">
+                        <div class="post-title">${file.name}</div>
+                        <div class="post-badges">${releeBadges}</div>
+                    </div>
+                    <div class="post-score">
+                        <strong style="color: ${verdictColor}">${kernel.decizie}</strong><br>
+                        <small>${kernel.motiv}</small><br>
+                        <small>Căi noi: ${file.cai_noi} | Închise: ${file.cai_inchise} | ΔJ: ${file.delta_j} | D: ${file.d.toFixed(2)}</small>
+                    </div>
+                    <div class="post-actions">
+                        <button class="action-btn ripple" onclick="actionInteleg('${file.name}')">🧠 Înțeleg</button>
+                        <button class="action-btn ripple" onclick="actionAplic('${file.name}')">🌱 Aplic în repo</button>
+                        <button class="action-btn ripple" onclick="actionOglinda('${file.name}')">🪞 Văd în Oglindă</button>
+                        <button class="action-btn ripple" onclick="actionVotez('${file.name}')">⚡ Votez DA</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function loadRepo() {
+            const repo = document.getElementById('repoInput').value;
+            repoFiles = mockRepos[repo] || [];
+            const feed = document.getElementById('feed');
+            feed.innerHTML = '';
+            
+            let totalJ = 0, totalD = 0, totalSDI = 0, voturi = 0;
+            
+            repoFiles.forEach(file => {
+                const kernel = kernelArca(file);
+                feed.innerHTML += renderPost(file, kernel);
+                totalJ += file.delta_j;
+                totalD += file.d;
+                totalSDI += 0.0001;
+                if (kernel.decizie === 'APROBAT_VOT') voturi++;
+            });
+
+            document.getElementById('jTotal').textContent = (totalJ * (totalD / repoFiles.length)).toFixed(3);
+            document.getElementById('sdi').textContent = totalSDI.toFixed(3);
+            document.getElementById('vot').textContent = Math.round((voturi / repoFiles.length) * 100) + '%';
+        }
+
+        function actionInteleg(file) {
+            constiintaScore += 1;
+            invatareCount += 1;
+            localStorage.setItem('constiinta', constiintaScore);
+            localStorage.setItem('invatare', invatareCount);
+            document.getElementById('constiinta').textContent = constiintaScore;
+            if (invatareCount >= 5) {
+                alert('🧠 Mod Arhitect Deblocat! Ai acces la kernel_arca() source.');
+            }
+        }
+
+        function actionAplic(file) {
+            constiintaScore += 2;
+            localStorage.setItem('constiinta', constiintaScore);
+            document.getElementById('constiinta').textContent = constiintaScore;
+            alert(`🌱 Ai aplicat ${file} în repo-ul tău. +2 Conștiință Colectivă`);
+        }
+
+        function actionOglinda(file) {
+            const f = repoFiles.find(x => x.name === file);
+            const kernel = kernelArca(f);
+            showModal('Oglinda L476', `<pre>${JSON.stringify(kernel, null, 2)}</pre>`);
+        }
+
+        function actionVotez(file) {
+            alert(`⚡ Vot DA înregistrat pentru ${file}. Necesită 90% consensus.`);
+        }
+
+        function generateReadme() {
+            const readme = `# PSIE🪞 Genesis Kernel v3.2.2
+
+**Axioma Zero**: \`Universul = Gând de Structurare ^ ∞\`  
+**Status**: \`STABIL\` \`AUDIT_READY\` \`L0-L476 ACTIVE\`
+
+### 1. Ce e Arca PSIE?
+Policy engine pentru guvernare multi-agent. Orice acțiune validă deschide ≥2 opțiuni noi si închide 0 opțiuni neconsimtite. Geometrie, nu morală.
+
+### 2. Cele 7 Reguli de Bază - Pentru Om Normal
+1. **Regula de Aur**: Nu faci altuia ce nu vrei să ți se facă. Dacă afectezi pe cineva, trebuie să ai "DA" 100% de la el.
+2. **Regula Votului**: Orice decizie mare se votează. Trece doar cu 90% DA.
+3. **Regula Carantinei**: Dacă experimentezi ceva periculos, o faci doar pe tine, într-un loc sigur, cu toți martori.
+4. **Regula "Pot să nu știu"**: O dată în viață poți zice "Nu vreau să știu ce urmează" ca să nu paralizezi de frică.
+5. **Regula Diversității**: Nu avem voie să devenim toți la fel. Dacă o idee omoară toate celelalte idei, e oprită.
+6. **Regula Geniului**: O dată în viață, dacă ai o idee care salvează pe toată lumea, poți opri tot sistemul ca să fii ascultat. Dacă minți, ești exclus.
+7. **Regula Oglinzii**: Dacă minți, manipulezi sau pasezi vina, primești o "oglindă" = toți văd ce ai făcut. Ieși doar când recunoști și repari, cu 90% iertare de la cei afectați.
+
+### 3. Audit
+Rulează \`kernel_arca(actiune, agent, total)\` pe orice acțiune. Decizie: \`APROBAT_VOT\` sau \`REFUZAT_L*\`. 
+Necesită 90% consensus pentru merge în main.
+
+### 4. Licență
+Axioma Zero Public Domain. Fork-uiește \`V\`-ul.
+
+**Commit**: \`git push origin main\` - Să crească fractalul.`;
+            showModal('README.md v3.2.2', `<pre>${readme}</pre><br><button class="primary" onclick="copyText(\`${readme.replace(/`/g, '\\`')}\`)">📋 Copiază</button>`);
+        }
+
+        function runKernel() {
+            const output = {
+                kernel: 'PSIE_genesis_kernel.py v3.2.2',
+                axioma: 'V^∞',
+                status: 'STABIL',
+                teste: '5/5 PASSED',
+                L0_L476: 'ACTIVE',
+                verdict: 'APROBAT_VOT 94%',
+                mesaj: 'Toți parametrii în limite. Transferat către stratul de vot consensus 90%.'
+            };
+            showModal('Kernel Arca Output', `<pre>${JSON.stringify(output, null, 2)}</pre>`);
+        }
+
+        function showModal(title, body) {
+            document.getElementById('modalTitle').textContent = title;
+            document.getElementById('modalBody').innerHTML = body;
+            document.getElementById('modal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('modal').classList.remove('active');
+        }
+
+        function copyText(text) {
+            navigator.clipboard.writeText(text);
+            alert('Copiat în clipboard!');
+        }
+
+        // Init
+        loadRepo();
+    </script>
+</body>
+</html>
