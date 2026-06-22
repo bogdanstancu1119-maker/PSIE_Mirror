@@ -1,0 +1,28 @@
+name: PSIE Audit L476
+on:
+  workflow_dispatch:
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Ia codul
+        uses: actions/checkout@v4
+        
+      - name: Pune Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          
+      - name: Rulează update_mirror.py
+        run: python update_mirror.py
+        
+      - name: Salvează audit_L476.json
+        run: |
+          git config user.name "PSIE Bot"
+          git config user.email "bot@psie.dev"
+          git add audit_L476.json index.html
+          git commit -m "Puls L347: Audit L476 generat" || echo "Nimic nou"
+          git push
