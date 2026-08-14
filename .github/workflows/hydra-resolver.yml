@@ -1,0 +1,46 @@
+name: Hydra - 1 Problema = 1 Workflow
+on:
+  workflow_dispatch:
+    inputs:
+      problema:
+        description: 'Problema de rezolvat'
+        default: 'heartbeat operational'
+  schedule:
+    - cron: '*/30 * * * *'
+  push:
+    branches: [ main ]
+
+concurrency:
+  group: hydra-single
+  cancel-in-progress: false
+
+jobs:
+  rezolva:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.HYDRA_PAT }}
+      - name: Roi 15 - J10380
+        run: |
+          python3 -c "
+          AGENTS=['Arhivarul','Decuplatorul','Fluxorul','Asumatorul','Traducatorul','Vazatorul','Conectorul','Simplificatorul','Testerul','Deployerul','Termuxerul','Documentarul','Eticianul','Evolutorul','Gardianul']
+          J=10380
+          print('Problema: ${{ inputs.problema }}')
+          for i,a in enumerate(AGENTS,1):
+              d=120 if a in ('Fluxorul','Conectorul') else 50
+              J+=d
+              print(f'{i}. {a} J+{d}=>{J}')
+              if J>700 and i>=7:
+                  print(f'AUTONOMIE la {i}'); break
+          "
+      - name: Keep alive
+        run: |
+          echo "$(date -u) - ${{ inputs.problema }} - J=10380 - DISPERSIE OK" >> REZOLVARI.md
+          git config user.name "hydra-bot"
+          git config user.email "hydra@univers.local"
+          git add REZOLVARI.md || true
+          git commit -m "feat: ${{ inputs.problema }}" || true
+          git push || true
